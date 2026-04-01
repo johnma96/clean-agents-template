@@ -1,0 +1,11 @@
+{
+  "project_name": "My Agent Project",
+  "project_slug": "my_agent_project",
+  "description": "A short description of the project",
+  "author_name": "Your Name",
+  "author_email": "you@example.com",
+  "python_version": "3.11",
+  "include_api": ["yes", "no"],
+  "include_monitoring": ["yes", "no"],
+  "include_mcp": ["yes", "no"]
+}
