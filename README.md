@@ -21,10 +21,10 @@ To generate a new project using this template, you need [Cookiecutter](https://c
 
 ```bash
 # Using pipx (recommended)
-pipx run cookiecutter https://github.com/tu-usuario/clean-agents-template
+pipx run cookiecutter https://github.com/johnma96/clean-agents-template.git
 
 # Or if you have cookiecutter installed globally:
-cookiecutter https://github.com/tu-usuario/clean-agents-template
+cookiecutter https://github.com/johnma96/clean-agents-template.git
 ```
 
 ### 2. Answer the prompts

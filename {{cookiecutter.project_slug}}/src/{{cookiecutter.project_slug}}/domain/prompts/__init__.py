@@ -45,7 +45,7 @@ class PromptTemplate:
         - system/   → agent system prompts
         - tasks/    → task-specific prompts
 
-    Variables in templates use Jinja2 syntax: {{ variable_name }}
+    Variables in templates use Jinja2 syntax: {% raw %}{{ variable_name }}{% endraw %}
 
     Example:
         template = PromptTemplate("tasks", "extraction")
