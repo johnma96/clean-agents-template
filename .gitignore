@@ -1,0 +1,35 @@
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+.env
+.venv/
+env/
+
+# Archivos de SO
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Archivos de editores e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Directorios de pruebas o cobertura (si luego agregas tests para probar el cookiecutter)
+.pytest_cache/
+htmlcov/
+.coverage
+.tox/
+
+# El propio proyecto generado si decides probar localmente y se genera en esta carpeta
+my_agent_project/
+support_bot/
+test_project/
+
+# Contexto propio claude
+.claude/
