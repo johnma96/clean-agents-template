@@ -49,6 +49,7 @@ The template will automatically initialize a Git repository and use `uv` to sync
 
 ```bash
 cd support_bot/
+uv sync --all-extras       # Install dev dependencies like pytest
 cp .env.example .env
 make test
 ```
