@@ -1,0 +1,18 @@
+# Base configuration — shared across all environments.
+# Override per environment in development.yaml, staging.yaml, production.yaml.
+# These YAML files are optional complements to .env — use them for non-secret
+# structured config (feature flags, retrieval params, model settings, etc.).
+
+app:
+  name: "{{ cookiecutter.project_slug }}"
+  version: "0.1.0"
+
+retrieval:
+  top_k: 5
+  # TODO: Add retrieval-specific parameters (chunk_size, reranking threshold, etc.)
+
+agent:
+  max_iterations: 5  # Safety limit for agentic loops
+  # TODO: Add agent-specific parameters
+
+# TODO: Add configuration sections for your project's components.

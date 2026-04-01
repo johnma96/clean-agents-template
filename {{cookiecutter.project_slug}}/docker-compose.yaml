@@ -1,0 +1,40 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./configs:/app/configs
+    # TODO: Add depends_on for any services your app requires (e.g., a local vector store).
+
+  # ── Optional: local vector store ─────────────────────────────────────────────
+  # Uncomment the service matching your chosen vector store.
+
+  # Chroma (local, zero infra):
+  # chroma:
+  #   image: chromadb/chroma:latest
+  #   ports:
+  #     - "8001:8000"
+  #   volumes:
+  #     - chroma_data:/chroma/chroma
+
+  # Qdrant (local):
+  # qdrant:
+  #   image: qdrant/qdrant:latest
+  #   ports:
+  #     - "6333:6333"
+  #   volumes:
+  #     - qdrant_data:/qdrant/storage
+
+  # ── Optional: local memory store ─────────────────────────────────────────────
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+
+# volumes:
+#   chroma_data:
+#   qdrant_data:

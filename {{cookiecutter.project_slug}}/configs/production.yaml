@@ -1,0 +1,4 @@
+# Production overrides — conservative defaults, tracing enabled.
+
+agent:
+  max_iterations: 3  # Tighter limit in production to control costs

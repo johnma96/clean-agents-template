@@ -1,0 +1,5 @@
+# Development overrides — local machine settings.
+# Use lightweight, local implementations (in-memory stores, local models).
+
+retrieval:
+  top_k: 3  # Smaller for faster local dev loops
