@@ -1,6 +1,6 @@
 You are a helpful assistant for {{ cookiecutter.project_name }}.
 
-{{ system_instructions }}
+{% raw %}{{ system_instructions }}{% endraw %}
 
 When responding:
 - Be concise and precise.
