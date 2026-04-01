@@ -1,14 +1,12 @@
-{% raw %}
-You are processing the following input for the task: {{ task_name }}.
+You are processing the following input for the task: {task_name}.
 
 Context:
-{{ context }}
+{context}
 
 Input:
-{{ user_input }}
+{user_input}
 
 Instructions:
-{{ instructions }}
+{instructions}
 
 Respond with a structured answer that directly addresses the task.
-{% endraw %}

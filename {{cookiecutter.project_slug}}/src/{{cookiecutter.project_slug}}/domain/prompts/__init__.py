@@ -1,11 +1,15 @@
 """Prompt template loader for {{ cookiecutter.project_name }}.
 
-Prompts are stored as plain .txt files with Jinja2 syntax and organized
-into subdirectories by purpose:
+Prompts are stored as plain .txt files using Python str.format() syntax
+and organized into subdirectories by purpose:
 
     domain/prompts/
     ├── system/     ← system prompts that define agent persona/behavior
     └── tasks/      ← task-specific prompts (extraction, summarization, etc.)
+
+No external dependencies — only Python stdlib. This keeps domain/ pure.
+
+Variables in templates use str.format() syntax: {variable_name}
 
 Keeping prompts as .txt files means they are:
     - Versionable and diffable in git
@@ -15,41 +19,29 @@ Keeping prompts as .txt files means they are:
 Usage:
     from {{ cookiecutter.project_slug }}.domain.prompts import PromptTemplate
 
-    template = PromptTemplate("tasks", "extraction")
-    rendered = template.render(topic="AI agents", text="...")
+    template = PromptTemplate("tasks", "example_task")
+    rendered = template.render(task_name="extraction", context="...", ...)
 """
 
 from pathlib import Path
 
-from jinja2 import Environment, FileSystemLoader, StrictUndefined, TemplateNotFound
-
 from {{ cookiecutter.project_slug }}.domain.exceptions import PromptNotFoundError
 
 _PROMPTS_DIR = Path(__file__).parent
-
-# Jinja2 environment scoped to this directory.
-# StrictUndefined raises an error for any variable referenced in the template
-# that was not passed to render(), catching mistakes early.
-_env = Environment(
-    loader=FileSystemLoader(str(_PROMPTS_DIR)),
-    undefined=StrictUndefined,
-    trim_blocks=True,
-    lstrip_blocks=True,
-)
 
 
 class PromptTemplate:
     """Loads and renders a prompt template from a .txt file.
 
     Templates live in subdirectories under domain/prompts/:
-        - system/   → agent system prompts
-        - tasks/    → task-specific prompts
+        - system/   -> agent system prompts
+        - tasks/    -> task-specific prompts
 
-    Variables in templates use Jinja2 syntax: {% raw %}{{ variable_name }}{% endraw %}
+    Variables in templates use Python str.format() syntax: {variable_name}
 
     Example:
-        template = PromptTemplate("tasks", "extraction")
-        rendered = template.render(topic="pensions", document_text="...")
+        template = PromptTemplate("tasks", "example_task")
+        rendered = template.render(task_name="extraction", context="...")
 
     Args:
         category: Subdirectory name (e.g., "system", "tasks").
@@ -60,28 +52,27 @@ class PromptTemplate:
     """
 
     def __init__(self, category: str, name: str) -> None:
-        self._path = f"{category}/{name}.txt"
-        try:
-            self._template = _env.get_template(self._path)
-        except TemplateNotFound as exc:
+        self._path = _PROMPTS_DIR / category / f"{name}.txt"
+        if not self._path.exists():
             raise PromptNotFoundError(
-                f"Prompt template not found: {self._path}. "
-                f"Expected file at: {_PROMPTS_DIR / self._path}"
-            ) from exc
+                f"Prompt template not found: {category}/{name}.txt. "
+                f"Expected file at: {self._path}"
+            )
+        self._template = self._path.read_text(encoding="utf-8")
 
     def render(self, **kwargs: str) -> str:
         """Render the template with the provided variables.
 
         Args:
-            **kwargs: Variables referenced in the template.
+            **kwargs: Variables referenced in the template as {variable_name}.
 
         Returns:
             The rendered prompt string.
 
         Raises:
-            jinja2.UndefinedError: If a required variable is missing from kwargs.
+            KeyError: If a variable referenced in the template is missing from kwargs.
         """
-        return self._template.render(**kwargs)
+        return self._template.format(**kwargs) if kwargs else self._template
 
     def __repr__(self) -> str:
-        return f"PromptTemplate({self._path!r})"
+        return f"PromptTemplate('{self._path.relative_to(_PROMPTS_DIR)}')"

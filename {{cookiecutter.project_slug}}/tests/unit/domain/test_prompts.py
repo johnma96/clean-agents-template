@@ -1,4 +1,8 @@
-"""Unit tests for the PromptTemplate loader."""
+"""Unit tests for the PromptTemplate loader.
+
+Templates use Python str.format() syntax — {variable_name}.
+Missing variables raise KeyError; missing template files raise PromptNotFoundError.
+"""
 
 import pytest
 

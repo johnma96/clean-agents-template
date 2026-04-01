@@ -70,9 +70,11 @@ def remove_conditional_dirs() -> None:
     include_api: str = "{{ cookiecutter.include_api }}"
     include_monitoring: str = "{{ cookiecutter.include_monitoring }}"
     include_mcp: str = "{{ cookiecutter.include_mcp }}"
+    include_workflows: str = "{{ cookiecutter.include_workflows }}"
 
     project_slug: str = "{{ cookiecutter.project_slug }}"
     infra_root = os.path.join("src", project_slug, "infrastructure")
+    app_root = os.path.join("src", project_slug, "application")
 
     if include_api == "no":
         remove_dir(os.path.join(infra_root, "api"))
@@ -83,7 +85,10 @@ def remove_conditional_dirs() -> None:
     if include_mcp == "no":
         remove_dir(os.path.join(infra_root, "mcp"))
 
-    if all(v == "yes" for v in [include_api, include_monitoring, include_mcp]):
+    if include_workflows == "no":
+        remove_dir(os.path.join(app_root, "workflows"))
+
+    if all(v == "yes" for v in [include_api, include_monitoring, include_mcp, include_workflows]):
         print("  [ok]  all optional directories retained")
 
 
@@ -115,6 +120,7 @@ def print_welcome() -> None:
     include_api: str = "{{ cookiecutter.include_api }}"
     include_monitoring: str = "{{ cookiecutter.include_monitoring }}"
     include_mcp: str = "{{ cookiecutter.include_mcp }}"
+    include_workflows: str = "{{ cookiecutter.include_workflows }}"
 
     optional_notes = []
     if include_api == "yes":
@@ -123,6 +129,8 @@ def print_welcome() -> None:
         optional_notes.append("  - Monitoring included → implement your tracer in infrastructure/monitoring/tracer.py")
     if include_mcp == "yes":
         optional_notes.append("  - MCP client included → implement your MCP connection in infrastructure/mcp/mcp_client.py")
+    if include_workflows == "yes":
+        optional_notes.append("  - Workflows included → implement multi-agent flows in application/workflows/")
 
     optional_block = "\n".join(optional_notes) if optional_notes else "  (no optional layers selected)"
 
