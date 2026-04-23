@@ -14,7 +14,7 @@ src/{{ cookiecutter.project_slug }}/
 │   ├── models.py                      # Business entities (Pydantic v2)
 │   ├── exceptions.py                  # Typed domain exceptions
 │   ├── interfaces.py                  # Protocols: LLMProvider, VectorStore, MemoryStore
-│   └── prompts/                       # .txt templates + PromptTemplate (Jinja2)
+│   └── prompts/                       # .txt templates + PromptTemplate (str.format())
 │       ├── system/                    # Agent persona / behavior prompts
 │       └── tasks/                     # Task-specific prompts
 ├── application/                       # ORCHESTRATION — programs against Protocols
@@ -150,3 +150,101 @@ uv add --dev <package>     # Dev-only dependency
 
 Always add the corresponding field to `config.py` (Settings) and `.env.example`
 when adding a new SDK that requires credentials.
+
+---
+
+## Git Workflow
+
+### Commit cadence
+- Claude Code should suggest a commit after each complete logical task,
+  not after each modified file.
+- A "logical task" is: an implemented feature, a passing test, a fixed bug,
+  a finished refactor, a completed docs section.
+- When finishing a task, Claude should say: "This task is complete.
+  Suggested commit: `<proposed message>`. Shall I proceed?"
+- Claude NEVER commits automatically without user confirmation.
+
+### Commit message format
+Use Conventional Commits. Messages must be written in English.
+
+   **Format:** `<type>(<scope>): <description>`
+
+   **Types:**
+   - `feat` — new feature or capability
+   - `fix` — bug fix
+   - `refactor` — code change that neither fixes a bug nor adds a feature
+   - `test` — adding or updating tests
+   - `docs` — documentation only
+   - `chore` — tooling, dependencies, CI, config
+   - `style` — formatting, whitespace (no logic change)
+   - `perf` — performance improvement
+
+   **Scopes** match the project's architectural layers and components.
+   Use lowercase, one word. Common scopes for agent projects:
+   `domain`, `application`, `infrastructure`, `llm`, `retrieval`, `memory`,
+   `api`, `agent`, `prompts`, `config`, `deps`, `ci`, `tests`, `docs`.
+
+   **Examples:**
+   ```
+   feat(llm): add streaming support to provider
+   fix(retrieval): handle empty search results
+   refactor(agent): switch from inheritance to composition
+   test(domain): add unit tests for Protocol implementations
+   docs(architecture): add ADR for prompt loading decision
+   chore(deps): upgrade pydantic to v2.9
+   ```
+
+### Commit body (optional)
+Use the body to explain **why**, not **what**. The diff already shows the what.
+Leave a blank line between the title and the body. Example:
+
+   ```
+   refactor(agent): switch from inheritance to composition
+
+   Base class was creating coupling between ResearchAgent and PQRSAgent
+   because streaming behavior differed. Composition via agent_utils.py
+   keeps each agent self-contained.
+   ```
+
+### Commit granularity
+One commit per logical task, not per file. If you implement `AnthropicLLM` and its
+tests, that is ONE commit with both files. If you implement the arXiv client and also
+fix a typo in the README, those are TWO separate commits (`feat` + `docs`).
+A commit should be revertable without breaking other things and must have a clear purpose.
+
+For a typical development session, aim for 3–6 commits per day.
+
+### Two additional rules
+1. Commit messages are written in English even if the project code has comments in
+   Spanish. This is industry standard and keeps the repo professional.
+2. The commit body (optional) explains the *why*, not the *what*.
+   The diff already shows the what.
+
+---
+
+## Work Log and Session Summary
+
+The project's historical record lives in `docs/work_log.md` at the repo root.
+
+**End-of-session protocol:**
+When the user requests a session summary (or uses similar commands like
+"Generate today's summary...", "Summarize the work we did..."), you MUST execute
+this exact flow to update `work_log.md`:
+
+1. **Analyze Manual Context:** Extract and summarize any explicit information the user
+   provided in that same prompt (e.g., external meetings, parallel research,
+   conversations with other models).
+2. **Analyze the Claude Code Session:** Review your own memory of the current session:
+   Which Clean Architecture files did we explore? What code or dependency problems did
+   we solve together? What new implementations were developed? What tasks remain pending?
+3. **Analyze the Repository (Git):** Use your terminal tools to review commits from the
+   last 24 hours (`git log --since="1 day ago"`) and current uncommitted changes
+   (`git status` or `git diff`).
+4. **Draft and Save:** Create a new entry at the end of `work_log.md` with today's date.
+   The format MUST be:
+
+   ### [Date in YYYY-MM-DD format]
+   - **Developer Context:** [Summary of the user's manual input]
+   - **Work with Claude Code:** [Summary of files touched, bugs fixed, or logic discussed]
+   - **Git History:** [Summary of commits made and current repo state]
+   - **Pending Tasks:** [Summary of tasks pending for the next session]
