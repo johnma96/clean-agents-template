@@ -44,7 +44,7 @@ src/{{ cookiecutter.project_slug }}/
 │   ├── models.py
 │   ├── exceptions.py
 │   ├── interfaces.py      # Protocols: LLMProvider, VectorStore, MemoryStore
-│   └── prompts/           # Jinja2 prompt templates
+│   └── prompts/           # .txt prompt templates (str.format())
 ├── application/
 │   ├── agents/            # Autonomous behavior
 │   ├── services/          # Deterministic flows

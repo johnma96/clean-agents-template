@@ -47,7 +47,7 @@ Each agent is self-contained and independently testable.
 
 ---
 
-## ADR-003: Prompts as .txt files with Jinja2
+## ADR-003: Prompts as .txt files with str.format()
 
 **Date:** <!-- fill in -->
 **Status:** Accepted
@@ -55,14 +55,21 @@ Each agent is self-contained and independently testable.
 **Context:**
 Prompts need to be versionable (diff in git), editable without touching Python code,
 and testable independently. Inline f-strings make this hard.
+A Jinja2-based approach was considered but rejected: Jinja2 is an external dependency
+that would live inside `domain/`, violating the principle that the domain layer has
+zero external dependencies beyond Pydantic. The domain should not know that Jinja2 exists,
+just as it should not know that GCP exists.
 
 **Decision:**
-Store prompts as `.txt` files in `domain/prompts/` with Jinja2 syntax for variable
-substitution. Loaded via `PromptTemplate` in `domain/prompts/__init__.py`.
+Store prompts as `.txt` files in `domain/prompts/` with Python `str.format()` syntax
+for variable substitution. Loaded via `PromptTemplate` in `domain/prompts/__init__.py`
+using only Python stdlib — no external dependencies introduced.
 
 **Consequences:**
-Prompts are diffable in git and editable by non-engineers. Jinja2 adds one dependency
-to the domain layer (acceptable — it's a standard templating tool with no external I/O).
+Prompts are diffable in git and editable by non-engineers. `str.format()` is sufficient
+for V1–V3 (variable substitution, no conditional logic). If conditional logic in prompts
+is needed in the future (V6+), Jinja2 can be introduced as a conscious, documented decision
+at that point — but only outside the domain layer.
 
 ---
 

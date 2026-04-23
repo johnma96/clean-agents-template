@@ -10,7 +10,7 @@ from {{ cookiecutter.project_slug }}.domain.exceptions import (
     ProviderError,
     RateLimitError,
     RetrievalError,
-    {{ cookiecutter.project_name | replace(' ', '') }}Error,
+    {{ cookiecutter.project_slug | title | replace('_', '') }}Error,
 )
 from {{ cookiecutter.project_slug }}.domain.models import AgentInput, AgentOutput, Document, Message
 
@@ -57,7 +57,7 @@ class TestAgentOutput:
 @pytest.mark.unit
 class TestExceptions:
     def test_all_exceptions_inherit_from_base(self) -> None:
-        base = {{ cookiecutter.project_name | replace(' ', '') }}Error
+        base = {{ cookiecutter.project_slug | title | replace('_', '') }}Error
         assert issubclass(ConfigurationError, base)
         assert issubclass(ProviderError, base)
         assert issubclass(GenerationError, base)
@@ -67,5 +67,5 @@ class TestExceptions:
         assert issubclass(RateLimitError, base)
 
     def test_exception_can_be_raised_and_caught(self) -> None:
-        with pytest.raises({{ cookiecutter.project_name | replace(' ', '') }}Error):
+        with pytest.raises({{ cookiecutter.project_slug | title | replace('_', '') }}Error):
             raise GenerationError("LLM failed")
