@@ -118,7 +118,7 @@ async def load_history_and_append(
     """
     history = await memory.get(session_id)
     await memory.append(session_id, new_message)
-    return history + [new_message]
+    return [*history, new_message]
 
 
 def wrap_output(answer: str, sources: list[Document] | None = None) -> AgentOutput:

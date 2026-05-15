@@ -10,6 +10,7 @@
 ```
 src/{{ cookiecutter.project_slug }}/
 ├── config.py                          # Pydantic Settings — single source of config
+├── paths.py                           # Path constants — single source of filesystem paths
 ├── domain/                            # PURE LOGIC — zero external dependencies
 │   ├── models.py                      # Business entities (Pydantic v2)
 │   ├── exceptions.py                  # Typed domain exceptions
@@ -115,9 +116,23 @@ infrastructure → application → domain
 
 ---
 
+## Path conventions
+
+`paths.py` is the only file that knows the project's directory structure.
+It is the single place where `Path(__file__)` is used to resolve absolute paths.
+
+```python
+from {{ cookiecutter.project_slug }}.paths import PROJECT_ROOT, DATA_DIR, PROMPTS_DIR
+```
+
+**Never use `Path(__file__)` outside `paths.py`.** Import the constant you need instead.
+
+---
+
 ## What NOT to do
 
 - Do NOT import from `infrastructure/` in `domain/` or `application/`
+- Do NOT use `Path(__file__)` outside `paths.py` — import from `paths.py` instead
 - Do NOT instantiate infrastructure classes inside agents or services
 - Do NOT hardcode API keys, URLs, or secrets — use `config.py` + `.env`
 - Do NOT use class inheritance for agents — use composition via `agent_utils.py`

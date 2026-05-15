@@ -22,6 +22,8 @@ from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from {{ cookiecutter.project_slug }}.paths import PROJECT_ROOT
+
 
 class Settings(BaseSettings):
     """Application settings loaded from .env and environment variables.
@@ -38,7 +40,7 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(PROJECT_ROOT / ".env"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",  # Ignore unknown env vars instead of raising

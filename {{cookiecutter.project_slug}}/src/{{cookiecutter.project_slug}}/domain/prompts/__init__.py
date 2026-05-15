@@ -23,11 +23,8 @@ Usage:
     rendered = template.render(task_name="extraction", context="...", ...)
 """
 
-from pathlib import Path
-
 from {{ cookiecutter.project_slug }}.domain.exceptions import PromptNotFoundError
-
-_PROMPTS_DIR = Path(__file__).parent
+from {{ cookiecutter.project_slug }}.paths import PROMPTS_DIR
 
 
 class PromptTemplate:
@@ -52,7 +49,7 @@ class PromptTemplate:
     """
 
     def __init__(self, category: str, name: str) -> None:
-        self._path = _PROMPTS_DIR / category / f"{name}.txt"
+        self._path = PROMPTS_DIR / category / f"{name}.txt"
         if not self._path.exists():
             raise PromptNotFoundError(
                 f"Prompt template not found: {category}/{name}.txt. "
@@ -75,4 +72,4 @@ class PromptTemplate:
         return self._template.format(**kwargs) if kwargs else self._template
 
     def __repr__(self) -> str:
-        return f"PromptTemplate('{self._path.relative_to(_PROMPTS_DIR)}')"
+        return f"PromptTemplate('{self._path.relative_to(PROMPTS_DIR)}')"

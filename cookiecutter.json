@@ -4,7 +4,7 @@
   "description": "A short description of the project",
   "author_name": "Your Name",
   "author_email": "you@example.com",
-  "python_version": "3.11",
+  "python_version": "3.12",
   "include_api": ["yes", "no"],
   "include_monitoring": ["yes", "no"],
   "include_mcp": ["yes", "no"],

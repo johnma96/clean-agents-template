@@ -1,0 +1,25 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: "^hooks/"
+      - id: ruff-format
+        files: "^hooks/"
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: "^\\{\\{cookiecutter\\.project_slug\\}\\}/"
+      - id: end-of-file-fixer
+        exclude: "^\\{\\{cookiecutter\\.project_slug\\}\\}/"
+      - id: check-yaml
+      - id: check-toml
+        exclude: "^\\{\\{cookiecutter\\.project_slug\\}\\}/"
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: detect-private-key
+      - id: no-commit-to-branch
+        args: ['--branch', 'master', '--branch', 'main']

@@ -47,9 +47,34 @@ def validate_author_email(email: str) -> None:
         sys.exit(1)
 
 
+def validate_python_version(version: str) -> None:
+    """
+    Ensure python_version is a supported CPython minor version (>= 3.10).
+
+    Accepts '3.x' where x >= 10. Rejects older versions that lack
+    modern typing features required by the template.
+    """
+    match = re.match(r"^3\.(\d+)$", version)
+    if not match:
+        print(
+            f"\nERROR: python_version '{version}' is not valid.\n"
+            "  - Expected format: 3.x  (e.g. 3.12, 3.13)\n"
+        )
+        sys.exit(1)
+    if int(match.group(1)) < 10:
+        print(
+            f"\nERROR: python_version '{version}' is too old.\n"
+            "  - Minimum supported version is 3.10.\n"
+            "  - Recommended: 3.12 (stable) or 3.13.\n"
+        )
+        sys.exit(1)
+
+
 if __name__ == "__main__":
     project_slug = "{{ cookiecutter.project_slug }}"
     author_email = "{{ cookiecutter.author_email }}"
+    python_version = "{{ cookiecutter.python_version }}"
 
     validate_project_slug(project_slug)
     validate_author_email(author_email)
+    validate_python_version(python_version)
