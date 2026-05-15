@@ -71,6 +71,8 @@ def remove_conditional_dirs() -> None:
     include_monitoring: str = "{{ cookiecutter.include_monitoring }}"
     include_mcp: str = "{{ cookiecutter.include_mcp }}"
     include_workflows: str = "{{ cookiecutter.include_workflows }}"
+    include_notebooks: str = "{{ cookiecutter.include_notebooks }}"
+    include_queries: str = "{{ cookiecutter.include_queries }}"
 
     project_slug: str = "{{ cookiecutter.project_slug }}"
     infra_root = os.path.join("src", project_slug, "infrastructure")
@@ -88,7 +90,17 @@ def remove_conditional_dirs() -> None:
     if include_workflows == "no":
         remove_dir(os.path.join(app_root, "workflows"))
 
-    if all(v == "yes" for v in [include_api, include_monitoring, include_mcp, include_workflows]):
+    if include_notebooks == "no":
+        remove_dir("notebooks")
+
+    if include_queries == "no":
+        remove_dir("queries")
+
+    all_vars = [
+        include_api, include_monitoring, include_mcp,
+        include_workflows, include_notebooks, include_queries,
+    ]
+    if all(v == "yes" for v in all_vars):
         print("  [ok]  all optional directories retained")
 
 
@@ -121,16 +133,34 @@ def print_welcome() -> None:
     include_monitoring: str = "{{ cookiecutter.include_monitoring }}"
     include_mcp: str = "{{ cookiecutter.include_mcp }}"
     include_workflows: str = "{{ cookiecutter.include_workflows }}"
+    include_notebooks: str = "{{ cookiecutter.include_notebooks }}"
+    include_queries: str = "{{ cookiecutter.include_queries }}"
 
     optional_notes = []
     if include_api == "yes":
-        optional_notes.append("  - API layer included → implement your HTTP entry point in infrastructure/api/")
+        optional_notes.append(
+            "  - API layer included → implement your HTTP entry point in infrastructure/api/"
+        )
     if include_monitoring == "yes":
-        optional_notes.append("  - Monitoring included → implement your tracer in infrastructure/monitoring/tracer.py")
+        optional_notes.append(
+            "  - Monitoring included → implement your tracer in infrastructure/monitoring/"
+        )
     if include_mcp == "yes":
-        optional_notes.append("  - MCP client included → implement your MCP connection in infrastructure/mcp/mcp_client.py")
+        optional_notes.append(
+            "  - MCP client included → implement your connection in infrastructure/mcp/"
+        )
     if include_workflows == "yes":
-        optional_notes.append("  - Workflows included → implement multi-agent flows in application/workflows/")
+        optional_notes.append(
+            "  - Workflows included → implement multi-agent flows in application/workflows/"
+        )
+    if include_notebooks == "yes":
+        optional_notes.append(
+            "  - Notebooks included → use notebooks/ for EDA and experimentation"
+        )
+    if include_queries == "yes":
+        optional_notes.append(
+            "  - Queries included → organize SQL in queries/develop/ and queries/production/"
+        )
 
     optional_block = "\n".join(optional_notes) if optional_notes else "  (no optional layers selected)"
 

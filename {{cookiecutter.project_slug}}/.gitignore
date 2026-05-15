@@ -40,12 +40,16 @@ coverage.xml
 .ipynb_checkpoints/
 *.ipynb~
 
-# Data (keep schemas and sample structure, ignore actual data files)
+# Data (keep structure, ignore actual data files)
 data/samples/*.json
 data/samples/*.csv
 data/samples/*.parquet
 data/samples/*.pdf
 !data/samples/.gitkeep
+
+# Raw data (too large for git, regenerable from source)
+data/raw/*
+!data/raw/.gitkeep
 
 # Vector store local data
 data/chroma/

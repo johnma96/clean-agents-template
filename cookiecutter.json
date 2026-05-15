@@ -8,5 +8,7 @@
   "include_api": ["yes", "no"],
   "include_monitoring": ["yes", "no"],
   "include_mcp": ["yes", "no"],
-  "include_workflows": ["yes", "no"]
+  "include_workflows": ["yes", "no"],
+  "include_notebooks": ["yes", "no"],
+  "include_queries": ["yes", "no"]
 }
